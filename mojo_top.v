@@ -19,24 +19,14 @@ module mojo_top(
     output avr_rx, // AVR Rx => FPGA Tx
     input avr_rx_busy // AVR Rx buffer full
     );
-// these signals should be high-z when not used
-assign spi_miso = 1'bz;
-assign avr_rx = 1'bz;
-assign spi_channel = 4'bzzzz;
-
-reg[7:0] leds;
-wire clk_2;
-
-wire rst = ~rst_n; // make reset active high
-always @* begin
-  
-end
-
-always @(posedge clk_2) begin
-  leds <= leds + 1;
-end
-
-assign led = leds;
-clock_divider #(32'd50000000) cd_inst(.clk(clk),.out(clk_2),.rst(rst_n));
-assign avr_rx = leds; 
-endmodule
+    // these signals should be high-z when not used
+    assign spi_miso = 1'bz;
+    assign avr_rx = 1'bz;
+    assign spi_channel = 4'bzzzz;
+    
+    wire[7:0] leds;
+    wire clk_2;
+    wire rst = ~rst_n;
+    
+    binary_counter #(32'd10000000) bc_inst(.clk(clk),.rst(rst),.led(led));
+  endmodule
